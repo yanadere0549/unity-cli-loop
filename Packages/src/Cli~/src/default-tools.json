@@ -569,6 +569,179 @@
           }
         }
       }
+    },
+    {
+      "name": "control-game-view",
+      "description": "List, select, or add Game View resolutions and report current Game View state",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "Action": {
+            "type": "string",
+            "description": "Action to perform: GetState(0)/ListSizes(1) - report current state and all available sizes, SelectSize(2) - activate a size by SizeIndex or SizeLabel, AddCustomSize(3) - add a new fixed-resolution entry",
+            "enum": [
+              "GetState",
+              "ListSizes",
+              "SelectSize",
+              "AddCustomSize"
+            ],
+            "default": "GetState"
+          },
+          "SizeIndex": {
+            "type": "integer",
+            "description": "Zero-based index of the size to select (used by SelectSize). Takes priority over SizeLabel when both are provided.",
+            "default": -1
+          },
+          "SizeLabel": {
+            "type": "string",
+            "description": "Label substring to match for SelectSize (case-insensitive). Used when SizeIndex is -1.",
+            "default": ""
+          },
+          "CustomWidth": {
+            "type": "integer",
+            "description": "Width in pixels for AddCustomSize. Must be 1-7680.",
+            "default": 1920
+          },
+          "CustomHeight": {
+            "type": "integer",
+            "description": "Height in pixels for AddCustomSize. Must be 1-4320.",
+            "default": 1080
+          },
+          "CustomLabel": {
+            "type": "string",
+            "description": "Label string for AddCustomSize. Must not be empty.",
+            "default": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "swap-play-mode-view",
+      "description": "Switch the primary play mode view between Game View and Device Simulator",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "TargetView": {
+            "type": "string",
+            "description": "Target play mode view type to make primary: GameView(0) - activate Game View, Simulator(1) - activate Device Simulator",
+            "enum": [
+              "GameView",
+              "Simulator"
+            ],
+            "default": "GameView"
+          }
+        }
+      }
+    },
+    {
+      "name": "control-device-simulator",
+      "description": "Control the Unity Device Simulator: open the window, list devices, select a device, set rotation, or set zoom scale",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "Action": {
+            "type": "string",
+            "description": "Action: GetState(0) - full state report, Open(1) - open/show window, ListDevices(2) - device list, SelectDevice(3) - switch device by DeviceIndex or DeviceName, SetRotation(4) - rotate by Rotation value, SetScale(5) - set zoom by Scale value",
+            "enum": [
+              "GetState",
+              "Open",
+              "ListDevices",
+              "SelectDevice",
+              "SetRotation",
+              "SetScale"
+            ],
+            "default": "GetState"
+          },
+          "DeviceIndex": {
+            "type": "integer",
+            "description": "Zero-based device index for SelectDevice. Takes priority over DeviceName when >= 0.",
+            "default": -1
+          },
+          "DeviceName": {
+            "type": "string",
+            "description": "Device friendly-name substring for SelectDevice (case-insensitive). Used when DeviceIndex is -1.",
+            "default": ""
+          },
+          "Rotation": {
+            "type": "integer",
+            "description": "Rotation in degrees for SetRotation. Must be 0, 90, 180, or 270.",
+            "default": 0
+          },
+          "Scale": {
+            "type": "integer",
+            "description": "Scale percentage for SetScale (10-100, where 100 = fit to window).",
+            "default": 100
+          },
+          "AutoOpen": {
+            "type": "boolean",
+            "description": "When true and Action=Open, auto-open the Simulator window if not already open. When false and Action=GetState/SelectDevice/SetRotation/SetScale, return error if window is not open rather than auto-opening.",
+            "default": true
+          }
+        }
+      }
+    },
+    {
+      "name": "simulate-touch-input",
+      "description": "Simulate touch input (tap, long-press, drag) in PlayMode via Input System Touchscreen",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "Action": {
+            "type": "string",
+            "description": "Touch action: Tap(0) - quick touch at (X,Y), LongPress(1) - touch and hold at (X,Y) for Duration seconds, Drag(2) - touch move from (FromX,FromY) to (X,Y)",
+            "enum": [
+              "Tap",
+              "LongPress",
+              "Drag"
+            ],
+            "default": "Tap"
+          },
+          "X": {
+            "type": "number",
+            "description": "Target X in SimX coordinates (top-left origin, pixels at the target resolution). For Drag, this is the endpoint X.",
+            "default": 0
+          },
+          "Y": {
+            "type": "number",
+            "description": "Target Y in SimY coordinates (top-left origin, pixels at the target resolution). For Drag, this is the endpoint Y.",
+            "default": 0
+          },
+          "FromX": {
+            "type": "number",
+            "description": "Start X for Drag action (top-left origin).",
+            "default": 0
+          },
+          "FromY": {
+            "type": "number",
+            "description": "Start Y for Drag action (top-left origin).",
+            "default": 0
+          },
+          "TouchId": {
+            "type": "integer",
+            "description": "Touch identifier (0-9). Use distinct values for concurrent touches. Defaults to 0.",
+            "default": 0
+          },
+          "Duration": {
+            "type": "number",
+            "description": "Hold duration in seconds for LongPress (must be > 0). Minimum hold time for Tap (0 = one-shot).",
+            "default": 0
+          },
+          "DragSpeed": {
+            "type": "number",
+            "description": "Drag interpolation speed in pixels per second (0 = instant single move event). Used by Drag action.",
+            "default": 500
+          },
+          "TargetView": {
+            "type": "string",
+            "description": "Target view for coordinate interpretation: GameView(0) - coordinates in Game View target resolution space, Simulator(1) - coordinates in Device Simulator screen space. Default: GameView.",
+            "enum": [
+              "GameView",
+              "Simulator"
+            ],
+            "default": "GameView"
+          }
+        }
+      }
     }
   ]
 }
